@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FORMA — Modern Furniture</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #f5f0e8;
+    --warm-white: #faf8f4;
+    --charcoal: #1a1a18;
+    --stone: #8a8478;
+    --accent: #c8a96e;
+    --accent-dark: #a8894e;
+    --border: #e0d8cc;
+    --card-bg: #ffffff;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--warm-white);
+    color: var(--charcoal);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed; width: 10px; height: 10px;
+    background: var(--accent); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transition: transform 0.15s ease, opacity 0.2s;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-ring {
+    position: fixed; width: 36px; height: 36px;
+    border: 1px solid var(--charcoal); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: all 0.3s cubic-bezier(.25,.46,.45,.94);
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem 4rem;
+    background: rgba(250,248,244,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    animation: slideDown 0.8s ease both;
+  }
+  @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem; font-weight: 300;
+    letter-spacing: 0.3em; color: var(--charcoal);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent); }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--stone);
+    font-size: 0.7rem; letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 1px; background: var(--accent);
+    transform: scaleX(0); transition: transform 0.3s;
+  }
+  .nav-links a:hover { color: var(--charcoal); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  .nav-cart {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--charcoal); cursor: pointer; padding: 0.5rem 1rem;
+    border: 1px solid var(--border); transition: all 0.3s;
+  }
+  .nav-cart:hover { background: var(--charcoal); color: var(--cream); border-color: var(--charcoal); }
+  .cart-count {
+    background: var(--accent); color: white;
+    border-radius: 50%; width: 18px; height: 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    padding-top: 80px;
+    overflow: hidden;
+  }
+  .hero-left {
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 6rem 4rem 6rem 6rem;
+    animation: fadeInLeft 1s ease 0.3s both;
+  }
+  @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
+
+  .hero-tag {
+    font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 2rem;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 6vw, 6rem);
+    font-weight: 300; line-height: 1.05;
+    margin-bottom: 2rem; color: var(--charcoal);
+  }
+  .hero-title em { font-style: italic; color: var(--accent); }
+  .hero-desc {
+    font-size: 0.75rem; line-height: 2;
+    color: var(--stone); max-width: 380px;
+    margin-bottom: 3rem;
+  }
+  .hero-actions { display: flex; gap: 1rem; }
+  .btn-primary {
+    padding: 1rem 2.5rem;
+    background: var(--charcoal); color: var(--cream);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    border: none; cursor: pointer;
+    transition: all 0.3s; text-decoration: none; display: inline-block;
+  }
+  .btn-primary:hover { background: var(--accent); }
+  .btn-secondary {
+    padding: 1rem 2.5rem;
+    background: transparent; color: var(--charcoal);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    border: 1px solid var(--charcoal); cursor: pointer;
+    transition: all 0.3s; text-decoration: none; display: inline-block;
+  }
+  .btn-secondary:hover { background: var(--charcoal); color: var(--cream); }
+
+  .hero-right {
+    background: var(--cream);
+    position: relative; overflow: hidden;
+    animation: fadeInRight 1s ease 0.5s both;
+  }
+  @keyframes fadeInRight { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+
+  .hero-img-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    background: linear-gradient(135deg, #ede8df 0%, #d8cfc0 100%);
+  }
+  .hero-chair-art {
+    width: 320px; height: 400px;
+    position: relative;
+    animation: float 6s ease-in-out infinite;
+  }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-18px); } }
+
+  /* SVG chair illustration */
+  .hero-badge {
+    position: absolute; bottom: 3rem; right: 3rem;
+    width: 100px; height: 100px;
+    border: 1px solid var(--stone);
+    border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--stone);
+    text-align: center; line-height: 1.6;
+    animation: rotate 20s linear infinite;
+  }
+  @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    overflow: hidden; background: var(--charcoal);
+    padding: 1rem 0; border-top: 1px solid #333; border-bottom: 1px solid #333;
+  }
+  .marquee {
+    display: flex; gap: 4rem;
+    animation: marquee 25s linear infinite;
+    white-space: nowrap;
+  }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .marquee-item {
+    font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--stone); flex-shrink: 0;
+  }
+  .marquee-item span { color: var(--accent); margin: 0 1rem; }
+
+  /* PRODUCTS */
+  .section { padding: 8rem 6rem; }
+  .section-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 4rem;
+    animation: fadeUp 0.8s ease both;
+  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-label {
+    font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 300;
+    line-height: 1.15;
+  }
+  .section-title em { font-style: italic; }
+  .view-all {
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--stone); text-decoration: none; border-bottom: 1px solid var(--border);
+    padding-bottom: 2px; transition: all 0.3s;
+  }
+  .view-all:hover { color: var(--charcoal); border-color: var(--charcoal); }
+
+  .products-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+  .product-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(.25,.46,.45,.94), box-shadow 0.4s;
+    animation: fadeUp 0.8s ease both;
+  }
+  .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(0,0,0,0.08); }
+
+  .product-img {
+    aspect-ratio: 4/3; background: var(--cream);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative;
+  }
+  .product-img svg { transition: transform 0.6s ease; }
+  .product-card:hover .product-img svg { transform: scale(1.05); }
+  .product-tag-new {
+    position: absolute; top: 1rem; left: 1rem;
+    background: var(--accent); color: white;
+    font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+  }
+
+  .product-info { padding: 1.5rem; }
+  .product-category {
+    font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--stone); margin-bottom: 0.5rem;
+  }
+  .product-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem; font-weight: 400; margin-bottom: 0.5rem;
+  }
+  .product-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);
+  }
+  .product-price {
+    font-size: 0.85rem; font-weight: 400; color: var(--charcoal);
+  }
+  .add-to-cart {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
+    background: var(--charcoal); color: var(--cream);
+    border: none; padding: 0.6rem 1.2rem; cursor: pointer;
+    transition: background 0.3s;
+  }
+  .add-to-cart:hover { background: var(--accent); }
+
+  /* ABOUT */
+  .about-section {
+    background: var(--cream);
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .about-visual {
+    background: var(--charcoal);
+    display: flex; align-items: center; justify-content: center;
+    padding: 6rem;
+    position: relative; overflow: hidden;
+  }
+  .about-visual::before {
+    content: 'FORMA'; position: absolute;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12rem; font-weight: 300; color: rgba(255,255,255,0.03);
+    letter-spacing: 0.2em;
+  }
+  .about-stat-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 2px; background: #2a2a28; width: 100%;
+  }
+  .about-stat {
+    background: var(--charcoal); padding: 2.5rem;
+    display: flex; flex-direction: column; gap: 0.5rem;
+  }
+  .about-stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem; font-weight: 300; color: var(--accent);
+  }
+  .about-stat-label {
+    font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--stone);
+  }
+  .about-content { padding: 6rem; display: flex; flex-direction: column; justify-content: center; }
+  .about-content .section-label { margin-bottom: 1.5rem; }
+  .about-content .section-title { margin-bottom: 2rem; }
+  .about-text { font-size: 0.75rem; line-height: 2.2; color: var(--stone); margin-bottom: 1.5rem; }
+
+  /* TESTIMONIALS */
+  .testimonials { background: var(--warm-white); }
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
+  }
+  .testimonial-card {
+    border: 1px solid var(--border);
+    padding: 2.5rem;
+    position: relative;
+    transition: transform 0.3s;
+  }
+  .testimonial-card:hover { transform: translateY(-4px); }
+  .testimonial-card::before {
+    content: '"'; position: absolute; top: 1.5rem; right: 2rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 5rem; line-height: 1; color: var(--border);
+    font-style: italic;
+  }
+  .stars { color: var(--accent); font-size: 0.8rem; margin-bottom: 1rem; letter-spacing: 0.1em; }
+  .testimonial-text { font-size: 0.72rem; line-height: 2; color: var(--stone); margin-bottom: 1.5rem; font-style: italic; }
+  .testimonial-author { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--charcoal); }
+  .testimonial-location { font-size: 0.6rem; color: var(--stone); margin-top: 0.25rem; }
+
+  /* NOTIFY & CONTACT */
+  .cta-section {
+    background: var(--charcoal);
+    padding: 8rem 6rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6rem;
+    align-items: start;
+  }
+  .cta-left {}
+  .cta-label {
+    font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1.5rem;
+  }
+  .cta-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 300;
+    color: var(--cream); line-height: 1.2; margin-bottom: 1.5rem;
+  }
+  .cta-desc { font-size: 0.72rem; line-height: 2; color: var(--stone); margin-bottom: 2.5rem; }
+
+  .notify-form { display: flex; gap: 0; margin-bottom: 1.5rem; }
+  .notify-input {
+    flex: 1; padding: 1rem 1.5rem;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-right: none;
+    color: var(--cream); font-family: 'DM Mono', monospace; font-size: 0.72rem;
+    outline: none;
+  }
+  .notify-input::placeholder { color: var(--stone); }
+  .notify-input:focus { border-color: var(--accent); }
+  .notify-btn {
+    padding: 1rem 1.5rem;
+    background: var(--accent); color: white;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    border: none; cursor: pointer; white-space: nowrap;
+    transition: background 0.3s;
+  }
+  .notify-btn:hover { background: var(--accent-dark); }
+
+  .whatsapp-btn {
+    display: inline-flex; align-items: center; gap: 0.75rem;
+    padding: 0.8rem 1.5rem;
+    background: #25D366; color: white;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+    border: none; cursor: pointer; text-decoration: none;
+    transition: background 0.3s;
+  }
+  .whatsapp-btn:hover { background: #1da851; }
+
+  /* CONTACT FORM */
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+  .form-label {
+    font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--stone);
+  }
+  .form-input, .form-textarea {
+    padding: 0.85rem 1.2rem;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    color: var(--cream); font-family: 'DM Mono', monospace; font-size: 0.72rem;
+    outline: none; resize: none; transition: border-color 0.3s;
+  }
+  .form-input:focus, .form-textarea:focus { border-color: var(--accent); }
+  .form-input::placeholder, .form-textarea::placeholder { color: var(--stone); }
+  .form-textarea { min-height: 100px; }
+  .form-submit {
+    padding: 1rem; background: transparent;
+    border: 1px solid var(--accent); color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.3s;
+    margin-top: 0.5rem;
+  }
+  .form-submit:hover { background: var(--accent); color: white; }
+
+  /* FOOTER */
+  footer {
+    background: #111110;
+    padding: 3rem 6rem;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid #222;
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; font-weight: 300; letter-spacing: 0.3em; color: var(--cream);
+  }
+  .footer-copy { font-size: 0.6rem; color: var(--stone); letter-spacing: 0.1em; }
+  .footer-links { display: flex; gap: 2rem; }
+  .footer-links a { font-size: 0.6rem; color: var(--stone); text-decoration: none; letter-spacing: 0.15em; text-transform: uppercase; transition: color 0.3s; }
+  .footer-links a:hover { color: var(--accent); }
+
+  /* CART DRAWER */
+  .cart-drawer {
+    position: fixed; right: 0; top: 0; bottom: 0; width: 420px;
+    background: var(--warm-white); z-index: 500;
+    border-left: 1px solid var(--border);
+    transform: translateX(100%); transition: transform 0.45s cubic-bezier(.25,.46,.45,.94);
+    display: flex; flex-direction: column;
+    box-shadow: -20px 0 60px rgba(0,0,0,0.1);
+  }
+  .cart-drawer.open { transform: translateX(0); }
+  .cart-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+    z-index: 499; opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .cart-overlay.open { opacity: 1; pointer-events: all; }
+  .cart-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem 2rem; border-bottom: 1px solid var(--border);
+  }
+  .cart-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 300; }
+  .cart-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--stone); }
+  .cart-items { flex: 1; overflow-y: auto; padding: 1.5rem 2rem; }
+  .cart-item {
+    display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--border);
+    align-items: center;
+  }
+  .cart-item-img {
+    width: 70px; height: 70px; background: var(--cream);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .cart-item-info { flex: 1; }
+  .cart-item-name { font-family: 'Cormorant Garamond', serif; font-size: 1rem; margin-bottom: 0.25rem; }
+  .cart-item-price { font-size: 0.7rem; color: var(--stone); }
+  .cart-item-remove { background: none; border: none; color: var(--stone); cursor: pointer; font-size: 1rem; }
+  .cart-footer { padding: 1.5rem 2rem; border-top: 1px solid var(--border); }
+  .cart-total {
+    display: flex; justify-content: space-between; margin-bottom: 1.5rem;
+    font-size: 0.8rem; letter-spacing: 0.05em;
+  }
+  .cart-total span:last-child { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; }
+  .checkout-btn {
+    width: 100%; padding: 1rem;
+    background: var(--charcoal); color: var(--cream);
+    font-family: 'DM Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    border: none; cursor: pointer; transition: background 0.3s;
+  }
+  .checkout-btn:hover { background: var(--accent); }
+  .cart-empty { text-align: center; padding: 3rem; color: var(--stone); font-size: 0.72rem; }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px);
+    background: var(--charcoal); color: var(--cream);
+    padding: 0.9rem 2rem; font-size: 0.7rem; letter-spacing: 0.1em;
+    z-index: 1000; transition: transform 0.4s cubic-bezier(.25,.46,.45,.94);
+    border-left: 3px solid var(--accent);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* DIVIDER */
+  .divider {
+    display: flex; align-items: center; gap: 2rem;
+    padding: 0 6rem; margin: 0;
+  }
+  .divider-line { flex: 1; height: 1px; background: var(--border); }
+  .divider-icon { color: var(--accent); font-size: 1rem; }
+
+  /* UPI STEPS */
+  .upi-steps {
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.25rem 2rem; border-bottom: 1px solid var(--border);
+    gap: 0; background: var(--cream);
+  }
+  .upi-step { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; }
+  .upi-step span {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--border); color: var(--stone);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem; transition: all 0.3s;
+  }
+  .upi-step p { font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--stone); }
+  .upi-step.active span { background: var(--accent); color: white; }
+  .upi-step.active p { color: var(--charcoal); }
+  .upi-step.done span { background: var(--charcoal); color: white; }
+  .upi-step-line { flex: 1; height: 1px; background: var(--border); margin: 0 0.75rem; margin-bottom: 1rem; }
+
+  /* UPI STEP 2 */
+  .upi-amount-banner {
+    background: #e8f5e9; border: 1px solid #c8e6c9; border-left: 4px solid #4caf50;
+    padding: 0.85rem 1.25rem; font-size: 0.72rem; color: #2e7d32; margin-bottom: 1.5rem;
+  }
+  .upi-qr-wrap {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 1.5rem; background: white; border: 1px solid var(--border);
+    margin-bottom: 1.25rem;
+  }
+  .upi-qr-img { width: 160px; height: 160px; image-rendering: pixelated; margin-bottom: 0.75rem; }
+  .upi-qr-label { font-size: 0.62rem; color: var(--stone); letter-spacing: 0.1em; text-transform: uppercase; }
+  .upi-vpa-label { font-size: 0.68rem; color: var(--charcoal); margin-top: 0.4rem; }
+  .upi-or {
+    display: flex; align-items: center; gap: 1rem; margin: 1rem 0;
+    font-size: 0.6rem; color: var(--stone); letter-spacing: 0.15em; text-transform: uppercase;
+  }
+  .upi-or::before, .upi-or::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .upi-app-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem; }
+  .upi-app-btn {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.75rem 1rem; border: 1px solid var(--border);
+    text-decoration: none; font-size: 0.68rem; color: var(--charcoal);
+    font-family: 'DM Mono', monospace; letter-spacing: 0.05em;
+    transition: all 0.25s; background: white;
+  }
+  .upi-app-btn:hover { border-color: var(--accent); background: var(--cream); transform: translateY(-2px); }
+  .upi-note { font-size: 0.62rem; color: var(--stone); text-align: center; margin-bottom: 0.5rem; }
+
+  /* UPI STEP 3 */
+  .upi-confirm-wrap { text-align: center; }
+  .upi-confirm-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+  .upi-confirm-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 300; margin-bottom: 0.5rem; }
+  .upi-confirm-desc { font-size: 0.68rem; color: var(--stone); line-height: 1.8; margin-bottom: 1.5rem; }
+
+  /* CHECKOUT MODAL */
+  .checkout-modal {
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.92);
+    width: min(560px, 95vw); max-height: 90vh; overflow-y: auto;
+    background: var(--warm-white); z-index: 502;
+    border: 1px solid var(--border);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.18);
+    opacity: 0; pointer-events: none;
+    transition: all 0.35s cubic-bezier(.25,.46,.45,.94);
+  }
+  .checkout-modal.open { opacity: 1; pointer-events: all; transform: translate(-50%, -50%) scale(1); }
+  .cmodal-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 1.75rem 2rem 1.25rem; border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; background: var(--warm-white); z-index: 2;
+  }
+  .cmodal-title { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; }
+  .cmodal-body { padding: 1.5rem 2rem 2rem; display: flex; flex-direction: column; gap: 1.25rem; }
+  .cmodal-summary {
+    background: var(--cream); border: 1px solid var(--border);
+    padding: 1rem 1.25rem; font-size: 0.68rem; line-height: 1.9; color: var(--stone);
+  }
+  .cmodal-form { display: flex; flex-direction: column; gap: 1rem; }
+  .cmodal-label { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--stone); }
+  .cmodal-input {
+    width: 100%; padding: 0.8rem 1rem;
+    border: 1px solid var(--border); background: white;
+    font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--charcoal);
+    outline: none; transition: border-color 0.3s;
+  }
+  .cmodal-input:focus { border-color: var(--accent); }
+  .cmodal-total-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    font-size: 0.72rem; color: var(--stone);
+  }
+  .cmodal-total-amt { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; color: var(--charcoal); }
+  .cmodal-pay-btn {
+    display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+    width: 100%; padding: 1rem;
+    background: var(--charcoal); color: var(--cream);
+    font-family: 'DM Mono', monospace; font-size: 0.72rem;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    border: none; cursor: pointer; transition: background 0.3s;
+  }
+  .cmodal-pay-btn:hover { background: #4a5c2a; background: var(--accent); }
+  .cmodal-note { font-size: 0.58rem; color: var(--stone); text-align: center; letter-spacing: 0.05em; }
+
+  /* SUCCESS MODAL */
+  .success-modal {
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: min(480px, 92vw);
+    background: var(--warm-white); z-index: 650;
+    border: 1px solid var(--border);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.2);
+    padding: 2.5rem 2.5rem 2rem;
+    opacity: 0; pointer-events: none;
+    transition: all 0.4s cubic-bezier(.25,.46,.45,.94);
+    text-align: center;
+  }
+  .success-modal.open { opacity: 1; pointer-events: all; transform: translate(-50%, -50%) scale(1); }
+  .success-icon {
+    width: 60px; height: 60px; border-radius: 50%;
+    background: var(--accent); color: white;
+    font-size: 1.6rem; display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.25rem;
+    animation: popIn 0.5s cubic-bezier(.175,.885,.32,1.275) both;
+  }
+  @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .success-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; margin-bottom: 0.5rem; }
+  .success-sub { font-size: 0.72rem; color: var(--stone); margin-bottom: 1.5rem; }
+  .success-notifs { text-align: left; background: var(--cream); padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+  .notif-row { font-size: 0.68rem; padding: 0.4rem 0; color: var(--charcoal); display: flex; gap: 0.75rem; align-items: flex-start; }
+  .success-meta { border: 1px solid var(--border); }
+  .success-meta-row { display: flex; justify-content: space-between; padding: 0.6rem 1rem; font-size: 0.65rem; border-bottom: 1px solid var(--border); }
+  .success-meta-row:last-child { border: none; }
+  .success-meta-row span { color: var(--stone); }
+
+  @media (max-width: 900px) {
+    nav { padding: 1rem 2rem; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { height: 50vh; }
+    .section { padding: 5rem 2rem; }
+    .products-grid { grid-template-columns: 1fr 1fr; }
+    .about-section { grid-template-columns: 1fr; }
+    .cta-section { grid-template-columns: 1fr; padding: 5rem 2rem; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 1.5rem; text-align: center; padding: 2rem; }
+    .cart-drawer { width: 100%; }
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Cart Overlay -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+
+<!-- Cart Drawer -->
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <span class="cart-title">Your Cart</span>
+    <button class="cart-close" onclick="toggleCart()">×</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <p class="cart-empty">Your cart is empty.<br>Explore our collection.</p>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total"><span>Subtotal</span><span id="cartTotal">₹0</span></div>
+    <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+  </div>
+</div>
+
+<!-- CHECKOUT OVERLAY + MODAL -->
+<div class="cart-overlay" id="checkoutOverlay" onclick="closeCheckoutModal()" style="z-index:498"></div>
+<div class="checkout-modal" id="checkoutModal">
+  <div class="cmodal-header">
+    <div>
+      <p class="section-label" style="margin-bottom:0.25rem;color:var(--accent);font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase">Almost There</p>
+      <h3 class="cmodal-title">Complete Your Order</h3>
+    </div>
+    <button class="cart-close" onclick="closeCheckoutModal()">×</button>
+  </div>
+  <!-- STEP INDICATOR -->
+  <div class="upi-steps">
+    <div class="upi-step active" id="step-dot-1"><span>1</span><p>Details</p></div>
+    <div class="upi-step-line"></div>
+    <div class="upi-step" id="step-dot-2"><span>2</span><p>Pay</p></div>
+    <div class="upi-step-line"></div>
+    <div class="upi-step" id="step-dot-3"><span>3</span><p>Confirm</p></div>
+  </div>
+
+  <div class="cmodal-body">
+    <!-- STEP 1: Customer Details -->
+    <div id="upi-step-1">
+      <div class="cmodal-summary" id="cmodalSummary"></div>
+      <form class="cmodal-form" onsubmit="goToUPIStep2(event)">
+        <div class="form-row" style="gap:0.75rem">
+          <div class="form-group" style="gap:0.4rem">
+            <label class="cmodal-label">Full Name *</label>
+            <input id="co_name" type="text" class="cmodal-input" placeholder="Priya Menon" required>
+          </div>
+          <div class="form-group" style="gap:0.4rem">
+            <label class="cmodal-label">Phone *</label>
+            <input id="co_phone" type="tel" class="cmodal-input" placeholder="+91 98765 43210" required>
+          </div>
+        </div>
+        <div class="form-group" style="gap:0.4rem">
+          <label class="cmodal-label">Email *</label>
+          <input id="co_email" type="email" class="cmodal-input" placeholder="priya@email.com" required>
+        </div>
+        <div class="form-group" style="gap:0.4rem">
+          <label class="cmodal-label">Delivery Address *</label>
+          <textarea id="co_address" class="cmodal-input" style="min-height:70px;resize:none" placeholder="Flat 4B, 12th Cross, Indiranagar, Bengaluru 560038" required></textarea>
+        </div>
+        <div class="cmodal-total-row">
+          <span>Total Payable</span>
+          <span id="cmodal_total" class="cmodal-total-amt"></span>
+        </div>
+        <button type="submit" class="cmodal-pay-btn">
+          Continue to Payment →
+        </button>
+      </form>
+    </div>
+
+    <!-- STEP 2: UPI Payment -->
+    <div id="upi-step-2" style="display:none">
+      <div class="upi-amount-banner">
+        Pay exactly <strong id="upi-pay-amount"></strong> to complete your order
+      </div>
+
+      <!-- QR CODE (generated via API) -->
+      <div class="upi-qr-wrap">
+        <img id="upi-qr-img" src="" alt="UPI QR Code" class="upi-qr-img">
+        <p class="upi-qr-label">Scan with any UPI app</p>
+        <p class="upi-vpa-label">UPI ID: <strong id="upi-vpa-display"></strong></p>
+      </div>
+
+      <!-- OR DIVIDER -->
+      <div class="upi-or"><span>or pay directly with</span></div>
+
+      <!-- APP BUTTONS -->
+      <div class="upi-app-btns">
+        <a id="gpay-link" href="#" target="_blank" class="upi-app-btn gpay">
+          <svg viewBox="0 0 48 48" width="28"><path d="M44.5 20H24v8h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 20-9 20-20 0-1.3-.2-2.7-.5-4z" fill="#FFC107"/><path d="M6.3 14.7l6.6 4.8C14.5 15.1 18.9 12 24 12c3.1 0 5.9 1.1 8.1 2.9l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.4 6.3 14.7z" fill="#FF3D00"/><path d="M24 44c5.5 0 10.5-2 14.3-5.3l-6.6-5.4C29.8 35 27 36 24 36c-6.1 0-10.7-3.1-11.8-8H5.3C8.7 39.1 15.8 44 24 44z" fill="#4CAF50"/><path d="M44.5 20H24v8h11.8c-.6 2.7-2.1 4.9-4.1 6.5l6.6 5.4C41.8 36.5 44 31 44 24c0-1.3-.2-2.7-.5-4z" fill="#1976D2"/></svg>
+          Google Pay
+        </a>
+        <a id="phonepe-link" href="#" target="_blank" class="upi-app-btn phonepe">
+          <svg viewBox="0 0 48 48" width="28"><rect width="48" height="48" rx="10" fill="#5f259f"/><path d="M24 8c-8.8 0-16 7.2-16 16s7.2 16 16 16c2.5 0 4.9-.6 7-1.6V32c-1.9 1.3-4.2 2-6.7 2-6.6 0-12-5.4-12-12s5.4-12 12-12c5.4 0 9.9 3.6 11.5 8.5H28v4h12V10h-4v5.2C33.7 11.4 29.2 8 24 8z" fill="white"/></svg>
+          PhonePe
+        </a>
+        <a id="paytm-link" href="#" target="_blank" class="upi-app-btn paytm">
+          <svg viewBox="0 0 48 48" width="28"><rect width="48" height="48" rx="6" fill="#00BAF2"/><text x="6" y="32" font-size="18" font-weight="bold" fill="white" font-family="Arial">Pay</text><text x="26" y="32" font-size="18" font-weight="bold" fill="#002970" font-family="Arial">tm</text></svg>
+          Paytm
+        </a>
+        <a id="bhim-link" href="#" target="_blank" class="upi-app-btn bhim">
+          <svg viewBox="0 0 48 48" width="28"><rect width="48" height="48" rx="6" fill="#FF6B00"/><text x="8" y="32" font-size="16" font-weight="bold" fill="white" font-family="Arial">BHIM</text></svg>
+          BHIM
+        </a>
+      </div>
+
+      <p class="upi-note">After paying, click below to enter your transaction ID</p>
+      <button class="cmodal-pay-btn" onclick="goToUPIStep3()" style="margin-top:0.5rem">
+        I've Paid — Enter Transaction ID →
+      </button>
+      <button onclick="goToUPIStep1()" style="background:none;border:none;color:var(--stone);font-size:0.65rem;cursor:pointer;margin-top:0.75rem;display:block;width:100%;text-align:center;letter-spacing:0.1em">← Go Back</button>
+    </div>
+
+    <!-- STEP 3: Confirm UTR -->
+    <div id="upi-step-3" style="display:none">
+      <div class="upi-confirm-wrap">
+        <div class="upi-confirm-icon">🔍</div>
+        <h4 class="upi-confirm-title">Enter Transaction Details</h4>
+        <p class="upi-confirm-desc">Enter the 12-digit UTR / Transaction ID from your UPI app to confirm your order.</p>
+        <form class="cmodal-form" onsubmit="confirmUPIPayment(event)">
+          <div class="form-group" style="gap:0.4rem">
+            <label class="cmodal-label">UPI Transaction ID / UTR *</label>
+            <input id="co_utr" type="text" class="cmodal-input" placeholder="e.g. 428312906543" minlength="8" required>
+            <span style="font-size:0.58rem;color:var(--stone)">Find this in your UPI app under Payment History</span>
+          </div>
+          <div class="form-group" style="gap:0.4rem">
+            <label class="cmodal-label">Screenshot (optional)</label>
+            <input id="co_screenshot" type="file" accept="image/*" class="cmodal-input" style="padding:0.5rem">
+          </div>
+          <div class="cmodal-total-row">
+            <span>Amount Paid</span>
+            <span id="upi-confirm-amt" class="cmodal-total-amt"></span>
+          </div>
+          <button type="submit" class="cmodal-pay-btn">✓ Confirm Order</button>
+          <p class="cmodal-note">Our team will verify your payment and confirm within 30 minutes.</p>
+        </form>
+      </div>
+      <button onclick="goToUPIStep2()" style="background:none;border:none;color:var(--stone);font-size:0.65rem;cursor:pointer;margin-top:0.75rem;display:block;width:100%;text-align:center;letter-spacing:0.1em">← Back to Payment</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="cart-overlay" id="successOverlay" onclick="closeSuccessModal()" style="z-index:600"></div>
+<div class="success-modal" id="successModal">
+  <div class="success-icon">✓</div>
+  <h3 class="success-title">Order Confirmed!</h3>
+  <p class="success-sub">Thank you, <strong id="success_name"></strong>. Here's what happens next:</p>
+  <div class="success-notifs">
+    <div class="notif-row">📧 <span>Confirmation email sent to your inbox</span></div>
+    <div class="notif-row">💬 <span>WhatsApp notification sent to our team</span></div>
+    <div class="notif-row">📱 <span>SMS confirmation sent to your phone</span></div>
+    <div class="notif-row">🏷️ <span>Our team will email you a tracking update within 24hrs</span></div>
+  </div>
+  <div class="success-meta">
+    <div class="success-meta-row"><span>Order ID</span><strong id="success_orderId"></strong></div>
+    <div class="success-meta-row"><span>UPI UTR / Txn ID</span><strong id="success_paymentId"></strong></div>
+    <div class="success-meta-row"><span>Amount Paid</span><strong id="success_total"></strong></div>
+  </div>
+  <button onclick="closeSuccessModal()" class="btn-primary" style="width:100%;margin-top:1.5rem;text-align:center;justify-content:center;display:block">Continue Shopping</button>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">FOR<span>M</span>A</a>
+  <ul class="nav-links">
+    <li><a href="#products">Collection</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-cart" onclick="toggleCart()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    Cart <div class="cart-count" id="cartCountBadge">0</div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-tag">New Collection — 2025</p>
+    <h1 class="hero-title">Where Form<br>Meets <em>Function</em></h1>
+    <p class="hero-desc">Handcrafted furniture designed for the modern home. Each piece is a statement of intention — minimal in detail, maximal in impact.</p>
+    <div class="hero-actions">
+      <a href="#products" class="btn-primary">Shop Collection</a>
+      <a href="#about" class="btn-secondary">Our Story</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img-placeholder">
+      <div class="hero-chair-art">
+        <!-- SVG Chair Illustration -->
+        <svg viewBox="0 0 320 400" fill="none" xmlns="http://www.w3.org/2000/svg" width="320" height="400">
+          <!-- Chair Legs -->
+          <rect x="80" y="280" width="12" height="100" rx="4" fill="#1a1a18"/>
+          <rect x="228" y="280" width="12" height="100" rx="4" fill="#1a1a18"/>
+          <rect x="90" y="310" width="12" height="80" rx="4" fill="#1a1a18" transform="rotate(5 90 310)"/>
+          <rect x="218" y="310" width="12" height="80" rx="4" fill="#1a1a18" transform="rotate(-5 218 310)"/>
+          <!-- Seat -->
+          <rect x="60" y="240" width="200" height="50" rx="8" fill="#c8a96e"/>
+          <rect x="65" y="244" width="190" height="42" rx="6" fill="#d4b87a"/>
+          <!-- Back support -->
+          <rect x="74" y="110" width="12" height="140" rx="4" fill="#1a1a18"/>
+          <rect x="234" y="110" width="12" height="140" rx="4" fill="#1a1a18"/>
+          <!-- Back rest -->
+          <rect x="60" y="100" width="200" height="120" rx="10" fill="#c8a96e"/>
+          <rect x="68" y="108" width="184" height="104" rx="8" fill="#d4b87a"/>
+          <!-- Back slats -->
+          <rect x="100" y="115" width="10" height="90" rx="3" fill="rgba(0,0,0,0.15)"/>
+          <rect x="125" y="115" width="10" height="90" rx="3" fill="rgba(0,0,0,0.15)"/>
+          <rect x="150" y="115" width="10" height="90" rx="3" fill="rgba(0,0,0,0.15)"/>
+          <rect x="175" y="115" width="10" height="90" rx="3" fill="rgba(0,0,0,0.15)"/>
+          <rect x="200" y="115" width="10" height="90" rx="3" fill="rgba(0,0,0,0.15)"/>
+          <!-- Shadow -->
+          <ellipse cx="160" cy="390" rx="100" ry="8" fill="rgba(0,0,0,0.08)"/>
+        </svg>
+      </div>
+      <div class="hero-badge">Free<br>Delivery<br>India</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee">
+    <span class="marquee-item">Handcrafted<span>✦</span></span>
+    <span class="marquee-item">Sustainably Sourced<span>✦</span></span>
+    <span class="marquee-item">Free Delivery<span>✦</span></span>
+    <span class="marquee-item">5-Year Warranty<span>✦</span></span>
+    <span class="marquee-item">Custom Orders<span>✦</span></span>
+    <span class="marquee-item">Handcrafted<span>✦</span></span>
+    <span class="marquee-item">Sustainably Sourced<span>✦</span></span>
+    <span class="marquee-item">Free Delivery<span>✦</span></span>
+    <span class="marquee-item">5-Year Warranty<span>✦</span></span>
+    <span class="marquee-item">Custom Orders<span>✦</span></span>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<section class="section" id="products">
+  <div class="section-header">
+    <div>
+      <p class="section-label">Featured Collection</p>
+      <h2 class="section-title">Crafted for<br><em>Every Space</em></h2>
+    </div>
+    <a href="#" class="view-all">View All →</a>
+  </div>
+  <div class="products-grid">
+
+    <div class="product-card" style="animation-delay:0.1s">
+      <div class="product-img">
+        <div class="product-tag-new">New</div>
+        <svg viewBox="0 0 200 160" width="180" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="90" width="160" height="35" rx="6" fill="#c8a96e"/>
+          <rect x="30" y="40" width="140" height="58" rx="8" fill="#d4b87a"/>
+          <rect x="28" y="125" width="12" height="25" rx="3" fill="#1a1a18"/>
+          <rect x="160" y="125" width="12" height="25" rx="3" fill="#1a1a18"/>
+        </svg>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Seating</p>
+        <h3 class="product-name">Arc Lounge Chair</h3>
+        <div class="product-footer">
+          <span class="product-price">₹28,500</span>
+          <button class="add-to-cart" onclick="addToCart('Arc Lounge Chair', 28500, this)">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card" style="animation-delay:0.2s">
+      <div class="product-img">
+        <svg viewBox="0 0 200 160" width="180" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="40" y="70" width="120" height="8" rx="4" fill="#1a1a18"/>
+          <rect x="35" y="40" width="130" height="35" rx="6" fill="#c8a96e"/>
+          <rect x="50" y="78" width="10" height="60" rx="3" fill="#1a1a18"/>
+          <rect x="140" y="78" width="10" height="60" rx="3" fill="#1a1a18"/>
+          <rect x="45" y="130" width="110" height="8" rx="3" fill="#1a1a18"/>
+        </svg>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Tables</p>
+        <h3 class="product-name">Float Coffee Table</h3>
+        <div class="product-footer">
+          <span class="product-price">₹18,200</span>
+          <button class="add-to-cart" onclick="addToCart('Float Coffee Table', 18200, this)">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card" style="animation-delay:0.3s">
+      <div class="product-img">
+        <svg viewBox="0 0 200 160" width="180" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="30" y="30" width="140" height="110" rx="6" fill="#d4b87a"/>
+          <rect x="38" y="38" width="124" height="95" rx="4" fill="#e8d5a3"/>
+          <line x1="100" y1="30" x2="100" y2="140" stroke="#c8a96e" stroke-width="3"/>
+          <rect x="30" y="80" width="140" height="6" rx="2" fill="#c8a96e"/>
+          <rect x="40" y="140" width="15" height="12" rx="2" fill="#1a1a18"/>
+          <rect x="145" y="140" width="15" height="12" rx="2" fill="#1a1a18"/>
+        </svg>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Storage</p>
+        <h3 class="product-name">Dune Bookshelf</h3>
+        <div class="product-footer">
+          <span class="product-price">₹34,900</span>
+          <button class="add-to-cart" onclick="addToCart('Dune Bookshelf', 34900, this)">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card" style="animation-delay:0.4s">
+      <div class="product-img">
+        <svg viewBox="0 0 200 160" width="180" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="75" width="180" height="50" rx="10" fill="#c8a96e"/>
+          <rect x="15" y="80" width="170" height="40" rx="8" fill="#d4b87a"/>
+          <rect x="20" y="125" width="15" height="25" rx="3" fill="#1a1a18"/>
+          <rect x="165" y="125" width="15" height="25" rx="3" fill="#1a1a18"/>
+          <rect x="50" y="45" width="100" height="38" rx="8" fill="#d4b87a"/>
+          <rect x="55" y="50" width="90" height="28" rx="6" fill="#e2c98a"/>
+        </svg>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Sofas</p>
+        <h3 class="product-name">Void 2-Seat Sofa</h3>
+        <div class="product-footer">
+          <span class="product-price">₹62,000</span>
+          <button class="add-to-cart" onclick="addToCart('Void 2-Seat Sofa', 62000, this)">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card" style="animation-delay:0.5s">
+      <div class="product-img">
+        <div class="product-tag-new">Sale</div>
+        <svg viewBox="0 0 200 160" width="180" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="80" r="45" fill="#c8a96e"/>
+          <circle cx="100" cy="80" r="38" fill="#d4b87a"/>
+          <rect x="95" y="125" width="10" height="30" rx="3" fill="#1a1a18"/>
+          <ellipse cx="100" cy="157" rx="22" ry="5" fill="rgba(0,0,0,0.1)"/>
+        </svg>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Lighting</p>
+        <h3 class="product-name">Orb Pendant Light</h3>
+        <div class="product-footer">
+          <span class="product-price">₹12,400</span>
+          <button class="add-to-cart" onclick="addToCart('Orb Pendant Light', 12400, this)">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card" style="animation-delay:0.6s">
+      <div class="product-img">
+        <svg viewBox="0 0 200 160" width="180" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="60" y="30" width="80" height="100" rx="6" fill="#c8a96e"/>
+          <rect x="65" y="35" width="70" height="90" rx="4" fill="#d4b87a"/>
+          <rect x="75" y="50" width="50" height="4" rx="2" fill="#c8a96e"/>
+          <rect x="75" y="62" width="50" height="4" rx="2" fill="#c8a96e"/>
+          <rect x="75" y="74" width="35" height="4" rx="2" fill="#c8a96e"/>
+          <rect x="65" y="90" width="70" height="2" fill="#c8a96e"/>
+          <rect x="65" y="100" width="70" height="25" rx="0" fill="#e2c98a"/>
+          <rect x="72" y="130" width="10" height="20" rx="3" fill="#1a1a18"/>
+          <rect x="118" y="130" width="10" height="20" rx="3" fill="#1a1a18"/>
+        </svg>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Workspace</p>
+        <h3 class="product-name">Solid Oak Desk</h3>
+        <div class="product-footer">
+          <span class="product-price">₹41,700</span>
+          <button class="add-to-cart" onclick="addToCart('Solid Oak Desk', 41700, this)">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div><div class="divider-icon">✦</div><div class="divider-line"></div></div>
+
+<!-- ABOUT -->
+<section class="about-section" id="about">
+  <div class="about-visual">
+    <div class="about-stat-grid">
+      <div class="about-stat"><span class="about-stat-num">12+</span><span class="about-stat-label">Years Crafting</span></div>
+      <div class="about-stat"><span class="about-stat-num">850+</span><span class="about-stat-label">Pieces Made</span></div>
+      <div class="about-stat"><span class="about-stat-num">98%</span><span class="about-stat-label">Happy Customers</span></div>
+      <div class="about-stat"><span class="about-stat-num">24</span><span class="about-stat-label">Artisans</span></div>
+    </div>
+  </div>
+  <div class="about-content">
+    <p class="section-label">Our Story</p>
+    <h2 class="section-title">Furniture Built<br>to Last <em>Lifetimes</em></h2>
+    <p class="about-text">FORMA was born from a simple belief: that the spaces we live in shape the people we become. Founded in 2012 by a team of furniture craftspeople and designers, we combine traditional joinery with contemporary form.</p>
+    <p class="about-text">Every piece is made in our Bengaluru workshop using sustainably sourced hardwoods and natural finishes. We believe furniture should improve with age — becoming part of your story, not just your home.</p>
+    <a href="#contact" class="btn-primary" style="max-width:fit-content">Get in Touch</a>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section testimonials" id="testimonials">
+  <div class="section-header">
+    <div>
+      <p class="section-label">Customer Reviews</p>
+      <h2 class="section-title">Homes That<br><em>Love Forma</em></h2>
+    </div>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">The Arc chair is everything I hoped for. The quality is extraordinary — solid, beautiful, and it fits my space perfectly. Delivery was also incredibly smooth.</p>
+      <p class="testimonial-author">Priya Menon</p>
+      <p class="testimonial-location">Bengaluru, Karnataka</p>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">I ordered a custom desk and it exceeded all expectations. The team was responsive on WhatsApp throughout. FORMA is now my go-to for any furniture needs.</p>
+      <p class="testimonial-author">Rohan Sharma</p>
+      <p class="testimonial-location">Mumbai, Maharashtra</p>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">The Float coffee table is a centerpiece in our living room. Guests always ask about it. Minimalist perfection — nothing unnecessary, nothing missing.</p>
+      <p class="testimonial-author">Ananya Krishnan</p>
+      <p class="testimonial-location">Chennai, Tamil Nadu</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / NOTIFY / CONTACT -->
+<section class="cta-section" id="contact">
+  <div class="cta-left">
+    <p class="cta-label">Stay Connected</p>
+    <h2 class="cta-title">Be First to Know<br>About New Drops</h2>
+    <p class="cta-desc">Get notified about new collections, exclusive offers, and limited pieces before anyone else.</p>
+
+    <div class="notify-form">
+      <input type="email" class="notify-input" placeholder="your@email.com" id="emailInput">
+      <button class="notify-btn" onclick="subscribeEmail()">Notify Me</button>
+    </div>
+
+    <a href="https://wa.me/919876543210?text=Hi%20FORMA!%20I'm%20interested%20in%20your%20furniture%20collection." class="whatsapp-btn" target="_blank">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Chat on WhatsApp
+    </a>
+  </div>
+
+  <div>
+    <p class="cta-label">Send an Inquiry</p>
+    <h2 class="cta-title" style="font-size:1.8rem;margin-bottom:1.5rem">We'd Love to<br><em>Hear From You</em></h2>
+    <form class="contact-form" onsubmit="submitContact(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input type="text" class="form-input" placeholder="Priya" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input type="text" class="form-input" placeholder="Menon" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input" placeholder="priya@example.com" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone (optional)</label>
+        <input type="tel" class="form-input" placeholder="+91 98765 43210">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message</label>
+        <textarea class="form-textarea" placeholder="Tell us about your space and what you're looking for..."></textarea>
+      </div>
+      <button type="submit" class="form-submit">Send Message →</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">FORMA</div>
+  <p class="footer-copy">© 2025 Forma Furniture. Bengaluru, India.</p>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Instagram</a>
+    <a href="#">Pinterest</a>
+  </div>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    setTimeout(() => {
+      ring.style.left = e.clientX + 'px';
+      ring.style.top = e.clientY + 'px';
+    }, 60);
+  });
+  document.querySelectorAll('a, button, .product-card').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.transform = 'translate(-50%,-50%) scale(2)'; ring.style.transform = 'translate(-50%,-50%) scale(1.5)'; });
+    el.addEventListener('mouseleave', () => { cursor.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.transform = 'translate(-50%,-50%) scale(1)'; });
+  });
+
+  // Cart state
+  let cart = [];
+  let cartOpen = false;
+
+  function toggleCart() {
+    cartOpen = !cartOpen;
+    document.getElementById('cartDrawer').classList.toggle('open', cartOpen);
+    document.getElementById('cartOverlay').classList.toggle('open', cartOpen);
+  }
+
+  function addToCart(name, price, btn) {
+    const existing = cart.find(i => i.name === name);
+    if (existing) { existing.qty++; }
+    else { cart.push({ name, price, qty: 1 }); }
+    updateCart();
+    showToast(`${name} added to cart`);
+    btn.textContent = '✓ Added';
+    btn.style.background = 'var(--accent)';
+    setTimeout(() => { btn.textContent = '+ Add'; btn.style.background = ''; }, 2000);
+  }
+
+  function removeFromCart(name) {
+    cart = cart.filter(i => i.name !== name);
+    updateCart();
+  }
+
+  function updateCart() {
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    document.getElementById('cartCountBadge').textContent = cart.reduce((s, i) => s + i.qty, 0);
+    document.getElementById('cartTotal').textContent = '₹' + total.toLocaleString('en-IN');
+    const container = document.getElementById('cartItems');
+    if (cart.length === 0) {
+      container.innerHTML = '<p class="cart-empty">Your cart is empty.<br>Explore our collection.</p>';
+      return;
+    }
+    container.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <div class="cart-item-img">
+          <svg viewBox="0 0 60 60" width="50" fill="none"><rect x="10" y="20" width="40" height="28" rx="4" fill="#c8a96e"/><rect x="15" y="8" width="30" height="16" rx="3" fill="#d4b87a"/></svg>
+        </div>
+        <div class="cart-item-info">
+          <p class="cart-item-name">${item.name}</p>
+          <p class="cart-item-price">₹${(item.price * item.qty).toLocaleString('en-IN')} × ${item.qty}</p>
+        </div>
+        <button class="cart-item-remove" onclick="removeFromCart('${item.name}')">×</button>
+      </div>
+    `).join('');
+  }
+
+  // ─────────────────────────────────────────────
+  // 🔑 CONFIGURATION — Replace with your details
+  // ─────────────────────────────────────────────
+  const CONFIG = {
+    upi_id: '7795760950-2@ybl',                      // ← Your UPI ID (e.g. forma@okicici)
+    store_whatsapp: '919876543210',               // Your WhatsApp number (with country code, no +)
+    emailjs_service: 'YOUR_SERVICE_ID',           // From emailjs.com
+    emailjs_template_customer: 'YOUR_TEMPLATE_CUSTOMER',
+    emailjs_template_owner: 'YOUR_TEMPLATE_OWNER',
+    emailjs_public_key: 'YOUR_PUBLIC_KEY',
+    fast2sms_key: 'YOUR_FAST2SMS_KEY',            // From fast2sms.com (India SMS)
+    store_email: 'owner@youremail.com',
+    store_name: 'FORMA Furniture',
+  };
+
+  // ─────────────────────────────────────────────
+  // CHECKOUT FLOW
+  // ─────────────────────────────────────────────
+  function checkout() {
+    if (cart.length === 0) { showToast('Your cart is empty!'); return; }
+    toggleCart();
+    openCheckoutModal();
+  }
+
+  function openCheckoutModal() {
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    document.getElementById('cmodalSummary').innerHTML =
+      cart.map(i => `<div style="display:flex;justify-content:space-between;margin-bottom:0.2rem"><span>${i.name} ×${i.qty}</span><span>₹${(i.price*i.qty).toLocaleString('en-IN')}</span></div>`).join('') +
+      `<div style="display:flex;justify-content:space-between;border-top:1px solid var(--border);margin-top:0.5rem;padding-top:0.5rem;font-weight:500"><span>Total</span><span>₹${total.toLocaleString('en-IN')}</span></div>`;
+    document.getElementById('cmodal_total').textContent = '₹' + total.toLocaleString('en-IN');
+    showUPIStep(1);
+    document.getElementById('checkoutModal').classList.add('open');
+    document.getElementById('checkoutOverlay').classList.add('open');
+  }
+
+  function closeCheckoutModal() {
+    document.getElementById('checkoutModal').classList.remove('open');
+    document.getElementById('checkoutOverlay').classList.remove('open');
+  }
+
+  // ─────────────────────────────────────────────
+  // UPI MULTI-STEP FLOW
+  // ─────────────────────────────────────────────
+  function showUPIStep(n) {
+    [1,2,3].forEach(i => {
+      document.getElementById(`upi-step-${i}`).style.display = i === n ? 'block' : 'none';
+      const dot = document.getElementById(`step-dot-${i}`);
+      dot.classList.remove('active','done');
+      if (i === n) dot.classList.add('active');
+      if (i < n) dot.classList.add('done');
+    });
+  }
+
+  function goToUPIStep1() { showUPIStep(1); }
+
+  function goToUPIStep2(e) {
+    if (e) e.preventDefault();
+    const name = document.getElementById('co_name').value.trim();
+    const email = document.getElementById('co_email').value.trim();
+    const phone = document.getElementById('co_phone').value.trim();
+    const address = document.getElementById('co_address').value.trim();
+    if (!name || !email || !phone || !address) { showToast('Please fill all required fields.'); return; }
+
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const orderId = 'ORD-' + Date.now();
+    window._pendingOrder = { name, email, phone, address, total, orderId, items: [...cart] };
+
+    // Show amount
+    document.getElementById('upi-pay-amount').textContent = '₹' + total.toLocaleString('en-IN');
+    document.getElementById('upi-confirm-amt').textContent = '₹' + total.toLocaleString('en-IN');
+    document.getElementById('upi-vpa-display').textContent = CONFIG.upi_id;
+
+    // Generate QR via quickchart (no API key needed)
+    const upiLink = `upi://pay?pa=${encodeURIComponent(CONFIG.upi_id)}&pn=${encodeURIComponent(CONFIG.store_name)}&am=${total}&cu=INR&tn=${encodeURIComponent('Order ' + orderId)}`;
+    const qrUrl = `https://quickchart.io/qr?text=${encodeURIComponent(upiLink)}&size=160&margin=1`;
+    document.getElementById('upi-qr-img').src = qrUrl;
+
+    // Set deep links for each app
+    document.getElementById('gpay-link').href = `tez://upi/pay?pa=${encodeURIComponent(CONFIG.upi_id)}&pn=${encodeURIComponent(CONFIG.store_name)}&am=${total}&cu=INR&tn=${encodeURIComponent('Order ' + orderId)}`;
+    document.getElementById('phonepe-link').href = `phonepe://pay?pa=${encodeURIComponent(CONFIG.upi_id)}&pn=${encodeURIComponent(CONFIG.store_name)}&am=${total}&cu=INR&tn=${encodeURIComponent('Order ' + orderId)}`;
+    document.getElementById('paytm-link').href = `paytmmp://pay?pa=${encodeURIComponent(CONFIG.upi_id)}&pn=${encodeURIComponent(CONFIG.store_name)}&am=${total}&cu=INR`;
+    document.getElementById('bhim-link').href = `upi://pay?pa=${encodeURIComponent(CONFIG.upi_id)}&pn=${encodeURIComponent(CONFIG.store_name)}&am=${total}&cu=INR&tn=${encodeURIComponent('Order ' + orderId)}`;
+
+    showUPIStep(2);
+  }
+
+  function goToUPIStep3() { showUPIStep(3); }
+
+  function confirmUPIPayment(e) {
+    e.preventDefault();
+    const utr = document.getElementById('co_utr').value.trim();
+    if (!utr) { showToast('Please enter your transaction ID.'); return; }
+    const order = window._pendingOrder;
+    order.paymentId = utr;
+    closeCheckoutModal();
+    cart = []; updateCart();
+    showOrderConfirmation(order);
+    sendEmailToCustomer(order);
+    sendEmailToOwner(order);
+    sendWhatsAppToOwner(order);
+    sendSMSToCustomer(order);
+  }
+
+  // ── 1. EMAIL TO CUSTOMER (via EmailJS) ──
+  function sendEmailToCustomer(order) {
+    if (!window.emailjs) return;
+    emailjs.send(CONFIG.emailjs_service, CONFIG.emailjs_template_customer, {
+      to_name: order.name,
+      to_email: order.email,
+      order_id: order.orderId,
+      items: order.items.map(i => `${i.name} ×${i.qty} — ₹${(i.price*i.qty).toLocaleString('en-IN')}`).join('\n'),
+      total: '₹' + order.total.toLocaleString('en-IN'),
+      payment_id: order.paymentId,
+    }, CONFIG.emailjs_public_key).catch(() => {});
+  }
+
+  // ── 2. EMAIL TO STORE OWNER (via EmailJS) ──
+  function sendEmailToOwner(order) {
+    if (!window.emailjs) return;
+    emailjs.send(CONFIG.emailjs_service, CONFIG.emailjs_template_owner, {
+      to_email: CONFIG.store_email,
+      customer_name: order.name,
+      customer_email: order.email,
+      customer_phone: order.phone,
+      customer_address: order.address,
+      order_id: order.orderId,
+      items: order.items.map(i => `${i.name} ×${i.qty} — ₹${(i.price*i.qty).toLocaleString('en-IN')}`).join('\n'),
+      total: '₹' + order.total.toLocaleString('en-IN'),
+      payment_id: order.paymentId,
+    }, CONFIG.emailjs_public_key).catch(() => {});
+  }
+
+  // ── 3. WHATSAPP TO STORE OWNER ──
+  function sendWhatsAppToOwner(order) {
+    const items = order.items.map(i => `• ${i.name} ×${i.qty} — ₹${(i.price*i.qty).toLocaleString('en-IN')}`).join('\n');
+    const msg = encodeURIComponent(
+      `🛋️ *New Order — ${order.orderId}*\n\n` +
+      `👤 ${order.name}\n📧 ${order.email}\n📱 ${order.phone}\n📍 ${order.address}\n\n` +
+      `*Items:*\n${items}\n\n` +
+      `💰 *Total: ₹${order.total.toLocaleString('en-IN')}*\n` +
+      `✅ UPI Transaction ID (UTR): ${order.paymentId}`
+    );
+    // Opens WhatsApp — in production use WhatsApp Business API for automated sending
+    window.open(`https://wa.me/${CONFIG.store_whatsapp}?text=${msg}`, '_blank');
+  }
+
+  // ── 4. SMS TO CUSTOMER (via Fast2SMS) ──
+  async function sendSMSToCustomer(order) {
+    if (CONFIG.fast2sms_key === 'YOUR_FAST2SMS_KEY') return; // skip if not configured
+    try {
+      await fetch('https://www.fast2sms.com/dev/bulkV2', {
+        method: 'POST',
+        headers: { 'authorization': CONFIG.fast2sms_key, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          route: 'q',
+          message: `Hi ${order.name}, your FORMA order ${order.orderId} is confirmed! Total: Rs.${order.total.toLocaleString('en-IN')}. UPI UTR: ${order.paymentId}. We'll verify and update you within 30 mins. Thank you!`,
+          language: 'english',
+          flash: 0,
+          numbers: order.phone.replace(/\D/g,'').slice(-10),
+        })
+      });
+    } catch(e) {}
+  }
+
+  // ─────────────────────────────────────────────
+  // ORDER SUCCESS MODAL
+  // ─────────────────────────────────────────────
+  function showOrderConfirmation(order) {
+    const modal = document.getElementById('successModal');
+    document.getElementById('success_orderId').textContent = order.orderId;
+    document.getElementById('success_name').textContent = order.name;
+    document.getElementById('success_paymentId').textContent = order.paymentId;
+    document.getElementById('success_total').textContent = '₹' + order.total.toLocaleString('en-IN');
+    modal.classList.add('open');
+  }
+  function closeSuccessModal() {
+    document.getElementById('successModal').classList.remove('open');
+  }
+
+  function subscribeEmail() {
+    const email = document.getElementById('emailInput').value;
+    if (!email || !email.includes('@')) { showToast('Please enter a valid email address.'); return; }
+    showToast(`✓ Subscribed! We'll notify ${email} about new drops.`);
+    document.getElementById('emailInput').value = '';
+  }
+
+  function submitContact(e) {
+    e.preventDefault();
+    showToast('✓ Message sent! We\'ll be in touch within 24 hours.');
+    e.target.reset();
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  // Scroll animations
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.style.animationPlayState = 'running'; } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.product-card, .section-header, .testimonial-card').forEach(el => {
+    el.style.animationPlayState = 'paused';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
